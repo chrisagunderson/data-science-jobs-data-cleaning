@@ -1,0 +1,88 @@
+---
+title: 'Data Cleaning Project: Data Science Salaries (2021)'
+author: "chris gunderson"
+output: html_document
+knit: (function(input_file, encoding) {
+    out_dir <- 'docs';
+    rmarkdown::render(input_file,
+      encoding=encoding,
+      output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Import Libraries
+
+```{r warning=FALSE, message=FALSE}
+library(tidyverse)
+library(janitor)
+```
+
+
+## Import Data
+
+```{r import-data}
+
+# Import data and glimpse at vars
+
+ds_dat <- read_csv('data_cleaned_2021.csv') %>% 
+  glimpse()
+
+```
+
+### Clean variable names
+
+These data have 742 observations of 42 variables. Some of the variable names have spaces in them. I will use `janitor` to produce consistent variable names.
+
+```{r clean-var-names}
+
+# make all var names lower case 
+# and separated with a _ if needed
+
+ds_dat <- ds_dat %>% 
+  janitor::clean_names() %>% 
+  glimpse()
+
+```
+
+### Unique Titles
+
+`job_title` appears to have many variations. First, I will examine how many unique job titles there are, and whether there are duplicates due to letter case.
+
+```{r}
+# Unique job titles
+
+ds_dat %>% 
+  group_by(job_title) %>% 
+  count()
+```
+
+There is a lot of job titles that are quite similar. Moreover, they include additional information (e.g., 'Associate', 'Business Assurance'). For the data to be tidy ([Hadley, 2014](https://vita.had.co.nz/papers/tidy-data.html)), the following criteria should be met:
+
+**Tidy Data**
+
+1. Every column is a variable.
+2. Every row is an observation.
+3. Every cell is a single value.
+
+In the above case, we would want to create variables to indicate level (e.g., Junior Data Scientist, Data Scientist, Senior Data Scientist, Principal Data Scientist). First, let's convert everything to lower case.
+
+### Lower case job titles
+
+```{r lower-case-job-title}
+
+# Convert job_title to lower case
+
+ds_dat <- ds_dat %>% 
+  mutate(job_title = tolower(job_title))
+
+ds_dat %>% 
+  select(job_title)
+```
+
+
+
+
+
