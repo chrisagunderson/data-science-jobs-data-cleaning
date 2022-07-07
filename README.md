@@ -1,4 +1,4 @@
-# data-science-jobs-data-cleaning
+# Jobs in data science: Exploratory Data Analysis
 
 Exploratory data analysis of data science (and related) jobs dataset scraped from Glassdoor.
 
